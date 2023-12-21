@@ -8,16 +8,16 @@ import { CustomerDto } from './customer.dto';
 export class CustomerService {
   constructor(@InjectRepository(Customer) private readonly customerRepository: Repository<Customer>) { }
 
-  create(createCustomerDto: CustomerDto) {
+  create(createCustomerDto: CustomerDto): Promise<Customer> {
     const customer: Customer = new Customer({ ...createCustomerDto })
     return this.customerRepository.save(customer);
   }
 
-  findAll() {
+  findAll(): Promise<Customer[]> {
     return this.customerRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Customer> | null {
     if (!id)
       return null
     return this.customerRepository.findOne({
@@ -27,7 +27,7 @@ export class CustomerService {
     });
   }
 
-  update(id: number, updateCustomerDto: CustomerDto) {
+  update(id: number, updateCustomerDto: CustomerDto): Promise<Customer> {
     const customer: Customer = new Customer({ ...updateCustomerDto })
     customer.id = id;
     return this.customerRepository.save(customer);
@@ -37,7 +37,7 @@ export class CustomerService {
     return this.customerRepository.delete(id)
   }
 
-  findByEmail(email: string) {
+  findByEmail(email: string): Promise<Customer> {
     return this.customerRepository.findOne({
       where: {
         email
